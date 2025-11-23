@@ -1,3 +1,22 @@
+   public double getTotalCharge() {
+      double total = 0;
+      Enumeration rentals = _rentals.elements();
+      while (rentals.hasMoreElements()) {
+         Rental each = (Rental) rentals.nextElement();
+         total += each.getCharge();
+      }
+      return total;
+   }
+
+   public int getTotalFrequentRenterPoints() {
+      int total = 0;
+      Enumeration rentals = _rentals.elements();
+      while (rentals.hasMoreElements()) {
+         Rental each = (Rental) rentals.nextElement();
+         total += each.getFrequentRenterPoints();
+      }
+      return total;
+   }
 import java.util.Enumeration;
 import java.util.Vector;
 
@@ -19,31 +38,16 @@ public class Customer {
    }
 
    public String statement() {
-      double totalAmount = 0;
-      int frequentRenterPoints = 0;
-
+      StringBuilder result = new StringBuilder("Rental Record for " + getName() + "\n");
       Enumeration rentals = _rentals.elements();
-
-      String result = "Rental Record for " + getName() + "\n";
-
       while (rentals.hasMoreElements()) {
          Rental each = (Rental) rentals.nextElement();
-
-          // add frequent renter points
-          frequentRenterPoints += each.getFrequentRenterPoints();
-
-          // show figures for this rental
-          result += "\t" + each.getMovie().getTitle() + "\t" +
-            String.valueOf(each.getCharge()) + "\n";
-
-          totalAmount += each.getCharge();
+         result.append("\t").append(each.getMovie().getTitle()).append("\t")
+               .append(each.getCharge()).append("\n");
       }
-
-      // add footer lines
-      result +=  "Amount owed is " + String.valueOf(totalAmount) + "\n";
-      result += "You earned " + String.valueOf(frequentRenterPoints) +
-                " frequent renter points";
-
-      return result;
+      result.append("Amount owed is ").append(getTotalCharge()).append("\n");
+      result.append("You earned ").append(getTotalFrequentRenterPoints())
+            .append(" frequent renter points");
+      return result.toString();
    }
 }
