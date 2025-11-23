@@ -1,7 +1,7 @@
     abstract class Price {
         abstract int getPriceCode();
         public abstract double getCharge(int daysRented);
-        int getFrequentRenterPoints(int daysRented) {
+        public int getFrequentRenterPoints(int daysRented) {
             return 1;
         }
     }
@@ -14,6 +14,7 @@
                 result += (daysRented - 2) * 1.5;
             return result;
         }
+        // Usa o padrão da superclasse para pontos
     }
 
     class ChildrensPrice extends Price {
@@ -24,6 +25,7 @@
                 result += (daysRented - 3) * 1.5;
             return result;
         }
+        // Usa o padrão da superclasse para pontos
     }
 
     class NewReleasePrice extends Price {
@@ -31,7 +33,8 @@
         public double getCharge(int daysRented) {
             return daysRented * 3;
         }
-        int getFrequentRenterPoints(int daysRented) {
+        @Override
+        public int getFrequentRenterPoints(int daysRented) {
             return (daysRented > 1) ? 2 : 1;
         }
     }
