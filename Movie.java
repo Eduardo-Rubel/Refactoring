@@ -1,6 +1,7 @@
     abstract class Price {
         abstract int getPriceCode();
         public abstract double getCharge(int daysRented);
+        // FrequentRenterPoints padrão para Price
         public int getFrequentRenterPoints(int daysRented) {
             return 1;
         }
@@ -33,6 +34,7 @@
         public double getCharge(int daysRented) {
             return daysRented * 3;
         }
+        // FrequentRenterPoints especial para NewReleasePrice
         @Override
         public int getFrequentRenterPoints(int daysRented) {
             return (daysRented > 1) ? 2 : 1;
