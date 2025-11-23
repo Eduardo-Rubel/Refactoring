@@ -1,5 +1,8 @@
       // Nova classe Statement
+
+      // Template Method
       abstract class Statement {
+         // Método template principal
          public String value(Customer customer) {
             StringBuilder result = new StringBuilder(headerString(customer));
             Enumeration rentals = customer.getRentals().elements();
@@ -11,38 +14,49 @@
             return result.toString();
          }
 
+         // Métodos abstratos para especialização
          protected abstract String headerString(Customer customer);
          protected abstract String eachRentalString(Rental each);
          protected abstract String footerString(Customer customer);
       }
 
+
+      // Implementação para texto
       class TextStatement extends Statement {
          @Override
          protected String headerString(Customer customer) {
+            // Cabeçalho do extrato em texto
             return "Rental Record for " + customer.getName() + "\n";
          }
          @Override
          protected String eachRentalString(Rental each) {
+            // Linha de cada aluguel em texto
             return "\t" + each.getMovie().getTitle() + "\t" + each.getCharge() + "\n";
          }
          @Override
          protected String footerString(Customer customer) {
+            // Rodapé do extrato em texto
             return "Amount owed is " + customer.getTotalCharge() + "\n" +
                    "You earned " + customer.getTotalFrequentRenterPoints() + " frequent renter points";
          }
       }
 
+
+      // Implementação para HTML
       class HtmlStatement extends Statement {
          @Override
          protected String headerString(Customer customer) {
+            // Cabeçalho do extrato em HTML
             return "<H1>Rentals for <EM>" + customer.getName() + "</EM></H1><P>\n";
          }
          @Override
          protected String eachRentalString(Rental each) {
+            // Linha de cada aluguel em HTML
             return each.getMovie().getTitle() + ": " + each.getCharge() + "<BR>\n";
          }
          @Override
          protected String footerString(Customer customer) {
+            // Rodapé do extrato em HTML
             return "<P>You owe <EM>" + customer.getTotalCharge() + "</EM><P>\n" +
                    "On this rental you earned <EM>" + customer.getTotalFrequentRenterPoints() +
                    "</EM> frequent renter points<P>";
