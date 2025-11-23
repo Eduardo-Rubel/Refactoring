@@ -1,41 +1,51 @@
       // Nova classe Statement
       abstract class Statement {
-         public abstract String value(Customer customer);
+         public String value(Customer customer) {
+            StringBuilder result = new StringBuilder(headerString(customer));
+            Enumeration rentals = customer.getRentals().elements();
+            while (rentals.hasMoreElements()) {
+               Rental each = (Rental) rentals.nextElement();
+               result.append(eachRentalString(each));
+            }
+            result.append(footerString(customer));
+            return result.toString();
+         }
+
+         protected abstract String headerString(Customer customer);
+         protected abstract String eachRentalString(Rental each);
+         protected abstract String footerString(Customer customer);
       }
 
       class TextStatement extends Statement {
          @Override
-         public String value(Customer customer) {
-            StringBuilder result = new StringBuilder("Rental Record for " + customer.getName() + "\n");
-            Enumeration rentals = customer.getRentals().elements();
-            while (rentals.hasMoreElements()) {
-               Rental each = (Rental) rentals.nextElement();
-               result.append("\t").append(each.getMovie().getTitle()).append("\t")
-                    .append(each.getCharge()).append("\n");
-            }
-            result.append("Amount owed is ").append(customer.getTotalCharge()).append("\n");
-            result.append("You earned ").append(customer.getTotalFrequentRenterPoints())
-                 .append(" frequent renter points");
-            return result.toString();
+         protected String headerString(Customer customer) {
+            return "Rental Record for " + customer.getName() + "\n";
+         }
+         @Override
+         protected String eachRentalString(Rental each) {
+            return "\t" + each.getMovie().getTitle() + "\t" + each.getCharge() + "\n";
+         }
+         @Override
+         protected String footerString(Customer customer) {
+            return "Amount owed is " + customer.getTotalCharge() + "\n" +
+                   "You earned " + customer.getTotalFrequentRenterPoints() + " frequent renter points";
          }
       }
 
       class HtmlStatement extends Statement {
          @Override
-         public String value(Customer customer) {
-            Enumeration rentals = customer.getRentals().elements();
-            String result = "<H1>Rentals for <EM>" + customer.getName() + "</EM></H1><P>\n";
-            while (rentals.hasMoreElements()) {
-               Rental each = (Rental) rentals.nextElement();
-               result += each.getMovie().getTitle() + ": " +
-                       String.valueOf(each.getCharge()) + "<BR>\n";
-            }
-            // add footer lines
-            result +=  "<P>You owe <EM>" + String.valueOf(customer.getTotalCharge()) + "</EM><P>\n";
-            result += "On this rental you earned <EM>" +
-                  String.valueOf(customer.getTotalFrequentRenterPoints()) +
-                  "</EM> frequent renter points<P>";
-            return result;
+         protected String headerString(Customer customer) {
+            return "<H1>Rentals for <EM>" + customer.getName() + "</EM></H1><P>\n";
+         }
+         @Override
+         protected String eachRentalString(Rental each) {
+            return each.getMovie().getTitle() + ": " + each.getCharge() + "<BR>\n";
+         }
+         @Override
+         protected String footerString(Customer customer) {
+            return "<P>You owe <EM>" + customer.getTotalCharge() + "</EM><P>\n" +
+                   "On this rental you earned <EM>" + customer.getTotalFrequentRenterPoints() +
+                   "</EM> frequent renter points<P>";
          }
       }
    public String htmlStatement() {
