@@ -1,19 +1,46 @@
-      public String htmlStatement() {
-         Enumeration rentals = _rentals.elements();
-         String result = "<H1>Rentals for <EM>" + getName() + "</EM></H1><P>\n";
-         while (rentals.hasMoreElements()) {
-            Rental each = (Rental) rentals.nextElement();
-            // show figures for each rental
-            result += each.getMovie().getTitle() + ": " +
-                     String.valueOf(each.getCharge()) + "<BR>\n";
-         }
-         // add footer lines
-         result +=  "<P>You owe <EM>" + String.valueOf(getTotalCharge()) + "</EM><P>\n";
-         result += "On this rental you earned <EM>" +
-               String.valueOf(getTotalFrequentRenterPoints()) +
-               "</EM> frequent renter points<P>";
-         return result;
+      // Nova classe Statement
+      abstract class Statement {
+         public abstract String value(Customer customer);
       }
+
+      class TextStatement extends Statement {
+         @Override
+         public String value(Customer customer) {
+            StringBuilder result = new StringBuilder("Rental Record for " + customer.getName() + "\n");
+            Enumeration rentals = customer.getRentals().elements();
+            while (rentals.hasMoreElements()) {
+               Rental each = (Rental) rentals.nextElement();
+               result.append("\t").append(each.getMovie().getTitle()).append("\t")
+                    .append(each.getCharge()).append("\n");
+            }
+            result.append("Amount owed is ").append(customer.getTotalCharge()).append("\n");
+            result.append("You earned ").append(customer.getTotalFrequentRenterPoints())
+                 .append(" frequent renter points");
+            return result.toString();
+         }
+      }
+
+      class HtmlStatement extends Statement {
+         @Override
+         public String value(Customer customer) {
+            Enumeration rentals = customer.getRentals().elements();
+            String result = "<H1>Rentals for <EM>" + customer.getName() + "</EM></H1><P>\n";
+            while (rentals.hasMoreElements()) {
+               Rental each = (Rental) rentals.nextElement();
+               result += each.getMovie().getTitle() + ": " +
+                       String.valueOf(each.getCharge()) + "<BR>\n";
+            }
+            // add footer lines
+            result +=  "<P>You owe <EM>" + String.valueOf(customer.getTotalCharge()) + "</EM><P>\n";
+            result += "On this rental you earned <EM>" +
+                  String.valueOf(customer.getTotalFrequentRenterPoints()) +
+                  "</EM> frequent renter points<P>";
+            return result;
+         }
+      }
+   public String htmlStatement() {
+      return new HtmlStatement().value(this);
+   }
    public double getTotalCharge() {
       double total = 0;
       Enumeration rentals = _rentals.elements();
@@ -54,16 +81,9 @@ public class Customer {
    }
 
    public String statement() {
-      StringBuilder result = new StringBuilder("Rental Record for " + getName() + "\n");
-      Enumeration rentals = _rentals.elements();
-      while (rentals.hasMoreElements()) {
-         Rental each = (Rental) rentals.nextElement();
-         result.append("\t").append(each.getMovie().getTitle()).append("\t")
-               .append(each.getCharge()).append("\n");
-      }
-      result.append("Amount owed is ").append(getTotalCharge()).append("\n");
-      result.append("You earned ").append(getTotalFrequentRenterPoints())
-            .append(" frequent renter points");
-      return result.toString();
+      return new TextStatement().value(this);
+   }
+   public Vector getRentals() {
+      return _rentals;
    }
 }
