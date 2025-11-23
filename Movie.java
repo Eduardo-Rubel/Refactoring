@@ -1,3 +1,8 @@
+    public int getFrequentRenterPoints(int daysRented) {
+            if ((_priceCode == NEW_RELEASE) && daysRented > 1)
+                 return 2;
+            return 1;
+    }
   public double getCharge(int daysRented) {
         double result = 0;
         switch (_priceCode) {

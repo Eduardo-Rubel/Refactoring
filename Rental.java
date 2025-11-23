@@ -1,8 +1,6 @@
-         public int getFrequentRenterPoints() {
-            if ((_movie.getPriceCode() == Movie.NEW_RELEASE) && _daysRented > 1)
-               return 2;
-            return 1;
-         }
+   public int getFrequentRenterPoints() {
+      return _movie.getFrequentRenterPoints(_daysRented);
+   }
       public double getCharge() {
          return _movie.getCharge(_daysRented);
       }
